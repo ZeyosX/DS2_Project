@@ -41,15 +41,6 @@ public final class Heap {
         return nodes.size();
     }
 
-    public boolean isEmpty() {
-        return nodes.isEmpty();
-    }
-
-    public void print() {
-        for (var node : nodes) {
-            System.out.println(node);
-        }
-    }
 }
 
 

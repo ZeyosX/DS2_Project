@@ -3,22 +3,21 @@ import javax.imageio.ImageReader;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 
 public final class JpegCompressor {
     private JpegCompressor() {
     }
 
-    public static void compress(String sourceImagePath, String compressedImagePath, float quality) throws IOException {
+    public static void compress(Path sourceImagePath, Path compressedImagePath, float quality) throws IOException {
 
 
         InputStream inputStream = null;
         try {
-            inputStream = Files.newInputStream(Paths.get(sourceImagePath));
+            inputStream = Files.newInputStream(sourceImagePath);
             var imageInputStream = ImageIO.createImageInputStream(inputStream);
             var readers = ImageIO.getImageReaders(imageInputStream);
 
@@ -36,11 +35,11 @@ public final class JpegCompressor {
         }
     }
 
-    private static void doLossyCompression(String compressedImagePath, float quality, ImageReader reader) throws IOException {
+    private static void doLossyCompression(Path compressedImagePath, float quality, ImageReader reader) throws IOException {
         ImageOutputStream outputStream;
         ImageWriter writer = null;
         try {
-            outputStream = ImageIO.createImageOutputStream(new File(compressedImagePath));
+            outputStream = ImageIO.createImageOutputStream(compressedImagePath.toFile());
             writer = ImageIO.getImageWriter(reader);
             writer.setOutput(outputStream);
 

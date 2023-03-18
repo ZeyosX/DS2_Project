@@ -13,16 +13,13 @@ public final class HuffmanCompression {
     public static long writtenBytes;
     public static long readBytes;
     public static long fileLength = 1;
-
-    private static boolean done = false;
-    private static boolean readOrWrite = true;
+    private static IOStatus status = IOStatus.DONE;
 
     public static void compress(Path inputFilePath, Path outputFilePath) throws IOException {
         var inputStream = new FileInputStream(inputFilePath.toFile());
         var outputStream = new FileOutputStream(outputFilePath.toFile());
 
-        done = false;
-        readOrWrite = true;
+        status = IOStatus.READING;
         fileLength = inputStream.getChannel().size();
 
         var frequencyMap = new HashMap<Character, Integer>();
@@ -38,11 +35,11 @@ public final class HuffmanCompression {
         var bitOutputStream = new BitOutputStream(outputStream);
         inputStream = new FileInputStream(inputFilePath.toFile());
 
-        readOrWrite = false;
+        status = IOStatus.WRITING;
         writeCompressedData(inputStream, codeMap, bitOutputStream);
 
         endCompressing(inputStream, outputStream, bitOutputStream);
-        done = true;
+        status = IOStatus.DONE;
     }
 
     private static void endCompressing(FileInputStream inputStream, FileOutputStream outputStream, BitOutputStream bitOutputStream) throws IOException {
@@ -146,8 +143,8 @@ public final class HuffmanCompression {
         }
     }
 
-    public static String getStatus() {
-        if (done) return "";
-        return readOrWrite ? "Reading" : "Writing";
+    public static IOStatus getStatus() {
+        return status;
     }
 }
+
