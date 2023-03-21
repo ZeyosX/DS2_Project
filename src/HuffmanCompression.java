@@ -19,6 +19,10 @@ public final class HuffmanCompression {
         var inputStream = new FileInputStream(inputFilePath.toFile());
         var outputStream = new FileOutputStream(outputFilePath.toFile());
 
+        var startTime = System.currentTimeMillis();
+        var fileSizeBefore = inputStream.getChannel().size();
+        System.out.printf("File size before compression: %d bytes\n", fileSizeBefore);
+
         status = IOStatus.READING;
         fileLength = inputStream.getChannel().size();
 
@@ -38,8 +42,14 @@ public final class HuffmanCompression {
         status = IOStatus.WRITING;
         writeCompressedData(inputStream, codeMap, bitOutputStream);
 
+        var endTime = System.currentTimeMillis();
         endCompressing(inputStream, outputStream, bitOutputStream);
         status = IOStatus.DONE;
+
+        var fileSizeAfter = outputFilePath.toFile().length();
+        System.out.printf("Size after compression: %d bytes\n", fileSizeAfter);
+        System.out.printf("Compression ratio: %.2f%%\n", (fileSizeAfter / (fileSizeBefore * 1.0)) * 100);
+        System.out.printf("Time taken: %d ms\n", endTime - startTime);
     }
 
     private static void endCompressing(FileInputStream inputStream, FileOutputStream outputStream, BitOutputStream bitOutputStream) throws IOException {
@@ -88,9 +98,9 @@ public final class HuffmanCompression {
         }
     }
 
-    public static void decompress(String inputFilePath, String outputFilePath) throws IOException {
-        var inputStream = new FileInputStream(inputFilePath);
-        var outputStream = new FileOutputStream(outputFilePath);
+    public static void decompress(Path inputFilePath, Path outputFilePath) throws IOException {
+        var inputStream = new FileInputStream(inputFilePath.toFile());
+        var outputStream = new FileOutputStream(outputFilePath.toFile());
 
         var root = readTree(inputStream);
         writeDecompressedText(inputStream, outputStream, root, root);
