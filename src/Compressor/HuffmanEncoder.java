@@ -128,7 +128,7 @@ public final class HuffmanEncoder extends HuffmanCodec {
     private static void buildHuffmanTree(MinHeap minHeap) throws Exception {
         HuffmanNode low1;
         HuffmanNode low2;
-        while (minHeap.totalNodes() > 1) {
+        while (minHeap.size() > 1) {
             low1 = minHeap.remove();
             low2 = minHeap.remove();
             if (low1 == null || low2 == null) throw new Exception("Min heap Error!");

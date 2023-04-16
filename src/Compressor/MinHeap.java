@@ -4,55 +4,55 @@ public final class MinHeap {
 
     private final HuffmanNode[] nodes;
     private final int capacity;
-    private int total;
+    private int size;
 
     public MinHeap(int max) {
         capacity = max;
-        total = 0;
+        size = 0;
         nodes = new HuffmanNode[capacity];
     }
 
     public synchronized void add(HuffmanNode node) {
         if (isFull()) return;
         if (isEmpty()) {
-            nodes[total++] = node;
+            nodes[size++] = node;
             return;
         }
-        var i = total - 1;
+        var i = size - 1;
         int pos;
         while (i >= 0) {
             if (nodes[i].frequency < node.frequency) break;
             i--;
         }
-        pos = total - 1;
+        pos = size - 1;
         while (pos >= i + 1) {
             nodes[pos + 1] = nodes[pos];
             pos--;
         }
         nodes[i + 1] = node;
-        total++;
+        size++;
     }
 
     public synchronized HuffmanNode remove() {
         if (isEmpty()) return null;
         HuffmanNode ret = nodes[0];
-        total--;
-        for (var i = 0; i < total; i++) {
+        size--;
+        for (var i = 0; i < size; i++) {
             nodes[i] = nodes[i + 1];
         }
         return ret;
     }
 
     public boolean isEmpty() {
-        return total == 0;
+        return size == 0;
     }
 
     public boolean isFull() {
-        return total == capacity;
+        return size == capacity;
     }
 
-    public int totalNodes() {
-        return total;
+    public int size() {
+        return size;
     }
 
 }
